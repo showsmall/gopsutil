@@ -4,16 +4,20 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/internal/common"
 )
 
 var ErrDockerNotAvailable = errors.New("docker not available")
 var ErrCgroupNotAvailable = errors.New("cgroup not available")
 
-var invoke common.Invoker
+var invoke common.Invoker = common.Invoke{}
 
-func init() {
-	invoke = common.Invoke{}
+const nanoseconds = 1e9
+
+type CgroupCPUStat struct {
+	cpu.TimesStat
+	Usage float64
 }
 
 type CgroupMemStat struct {
